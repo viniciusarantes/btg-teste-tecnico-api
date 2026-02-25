@@ -1,10 +1,10 @@
-﻿using TesteTecnicoBTG.Data;
-using TesteTecnicoBTG.Data.Interfaces;
-using TesteTecnicoBTG.Data.Repositories;
-using TesteTecnicoBTG.Services;
-using TesteTecnicoBTG.Services.Interfaces;
+﻿using ApiUsuarioKRT.Data;
+using ApiUsuarioKRT.Data.Interfaces;
+using ApiUsuarioKRT.Data.Repositories;
+using ApiUsuarioKRT.Services;
+using ApiUsuarioKRT.Services.Interfaces;
 
-namespace TesteTecnicoBTG.Config
+namespace ApiUsuarioKRT.Config
 {
     public static class InjectionConfig
     {

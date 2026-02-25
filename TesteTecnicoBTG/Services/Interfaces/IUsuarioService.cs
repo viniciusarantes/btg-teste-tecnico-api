@@ -1,7 +1,7 @@
-﻿using TesteTecnicoBTG.ModelView.Request;
-using TesteTecnicoBTG.ModelView.Response;
+﻿using ApiUsuarioKRT.ModelView.Request;
+using ApiUsuarioKRT.ModelView.Response;
 
-namespace TesteTecnicoBTG.Services.Interfaces
+namespace ApiUsuarioKRT.Services.Interfaces
 {
     public interface IUsuarioService
     {

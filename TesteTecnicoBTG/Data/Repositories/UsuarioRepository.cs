@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using TesteTecnicoBTG.Data.Interfaces;
-using TesteTecnicoBTG.Models;
+using ApiUsuarioKRT.Data.Interfaces;
+using ApiUsuarioKRT.Models;
 
-namespace TesteTecnicoBTG.Data.Repositories
+namespace ApiUsuarioKRT.Data.Repositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {

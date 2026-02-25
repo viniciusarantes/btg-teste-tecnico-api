@@ -1,6 +1,6 @@
-﻿using TesteTecnicoBTG.Models;
+﻿using ApiUsuarioKRT.Models;
 
-namespace TesteTecnicoBTG.ModelView.Request
+namespace ApiUsuarioKRT.ModelView.Request
 {
     public class UpdateUsuarioRequest
     {

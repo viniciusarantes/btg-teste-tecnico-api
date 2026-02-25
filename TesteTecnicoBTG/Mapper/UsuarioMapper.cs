@@ -1,8 +1,8 @@
 ﻿using Microsoft.OpenApi.Extensions;
-using TesteTecnicoBTG.Models;
-using TesteTecnicoBTG.ModelView.Response;
+using ApiUsuarioKRT.Models;
+using ApiUsuarioKRT.ModelView.Response;
 
-namespace TesteTecnicoBTG.Mapper
+namespace ApiUsuarioKRT.Mapper
 {
     public static class UsuarioMapper
     {

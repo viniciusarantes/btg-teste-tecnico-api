@@ -5,6 +5,11 @@ VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiUsuariosKRT", "ApiUsuariosKRT.csproj", "{FCAA4423-D60C-451E-8514-DA4B91FC8DD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiUsuarioKRT.Tests", "..\ApiUsuarioKRT.Tests\ApiUsuarioKRT.Tests.csproj", "{B818FBC4-7F22-4B04-AD1F-F065A9EF85CC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FCAA4423-D60C-451E-8514-DA4B91FC8DD3} = {FCAA4423-D60C-451E-8514-DA4B91FC8DD3}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,10 @@ Global
 		{FCAA4423-D60C-451E-8514-DA4B91FC8DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCAA4423-D60C-451E-8514-DA4B91FC8DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCAA4423-D60C-451E-8514-DA4B91FC8DD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B818FBC4-7F22-4B04-AD1F-F065A9EF85CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B818FBC4-7F22-4B04-AD1F-F065A9EF85CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B818FBC4-7F22-4B04-AD1F-F065A9EF85CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B818FBC4-7F22-4B04-AD1F-F065A9EF85CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

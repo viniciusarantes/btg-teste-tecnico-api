@@ -1,4 +1,4 @@
-using TesteTecnicoBTG.Config;
+using ApiUsuarioKRT.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TesteTecnicoBTG.Models;
-using TesteTecnicoBTG.ModelView.Request;
-using TesteTecnicoBTG.ModelView.Response;
-using TesteTecnicoBTG.Services.Interfaces;
+using ApiUsuarioKRT.Models;
+using ApiUsuarioKRT.ModelView.Request;
+using ApiUsuarioKRT.ModelView.Response;
+using ApiUsuarioKRT.Services.Interfaces;
 
-namespace TesteTecnicoBTG.Controllers
+namespace ApiUsuarioKRT.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

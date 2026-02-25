@@ -1,4 +1,4 @@
-﻿namespace TesteTecnicoBTG.Models
+﻿namespace ApiUsuarioKRT.Models
 {
     public enum StatusConta
     {

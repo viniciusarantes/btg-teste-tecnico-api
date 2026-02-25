@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using TesteTecnicoBTG.Data.Interfaces;
-using TesteTecnicoBTG.Mapper;
-using TesteTecnicoBTG.Models;
-using TesteTecnicoBTG.ModelView.Request;
-using TesteTecnicoBTG.ModelView.Response;
-using TesteTecnicoBTG.Services.Interfaces;
+using ApiUsuarioKRT.Data.Interfaces;
+using ApiUsuarioKRT.Mapper;
+using ApiUsuarioKRT.Models;
+using ApiUsuarioKRT.ModelView.Request;
+using ApiUsuarioKRT.ModelView.Response;
+using ApiUsuarioKRT.Services.Interfaces;
 
-namespace TesteTecnicoBTG.Services
+namespace ApiUsuarioKRT.Services
 {
     public class UsuarioService : IUsuarioService
     {

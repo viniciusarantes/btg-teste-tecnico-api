@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TesteTecnicoBTG.ModelView.Response
+namespace ApiUsuarioKRT.ModelView.Response
 {
     public class UsuarioResponse
     {

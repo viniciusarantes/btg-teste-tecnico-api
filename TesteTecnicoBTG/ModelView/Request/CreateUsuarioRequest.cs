@@ -1,4 +1,4 @@
-﻿namespace TesteTecnicoBTG.ModelView.Request
+﻿namespace ApiUsuarioKRT.ModelView.Request
 {
     public class CreateUsuarioRequest
     {

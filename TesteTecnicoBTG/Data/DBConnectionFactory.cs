@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.Common;
 
-namespace TesteTecnicoBTG.Data
+namespace ApiUsuarioKRT.Data
 {
     public class DBConnectionFactory
     {
