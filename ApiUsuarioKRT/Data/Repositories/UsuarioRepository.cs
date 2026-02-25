@@ -7,9 +7,9 @@ namespace ApiUsuarioKRT.Data.Repositories
     public class UsuarioRepository : IUsuarioRepository
     {
 
-        private readonly DBConnectionFactory _dbConnectionFactory;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
-        public UsuarioRepository(DBConnectionFactory dbConnectionFactory)
+        public UsuarioRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _dbConnectionFactory = dbConnectionFactory;
         }

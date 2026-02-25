@@ -11,7 +11,7 @@ namespace ApiUsuarioKRT.Config
         public static IServiceCollection AddDependencyInjection(this IServiceCollection services)
         {
             // Database
-            services.AddSingleton<DBConnectionFactory>();
+            services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 
             // Services
             services.AddScoped<IUsuarioService, UsuarioService>();
