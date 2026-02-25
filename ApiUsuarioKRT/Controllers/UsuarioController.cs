@@ -60,7 +60,7 @@ namespace ApiUsuarioKRT.Controllers
             try
             {
                 var usuario = await _usuarioService.CreateUsuarioAsync(request);
-                return Ok(usuario);
+                return CreatedAtAction(nameof(GetUsuarioDetail), new { id = usuario.Id}, usuario);
             }
             catch (Exception ex)
             {
