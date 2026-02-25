@@ -1,4 +1,5 @@
-﻿using TesteTecnicoBTG.Data.Interfaces;
+﻿using Microsoft.Extensions.Caching.Memory;
+using TesteTecnicoBTG.Data.Interfaces;
 using TesteTecnicoBTG.Mapper;
 using TesteTecnicoBTG.Models;
 using TesteTecnicoBTG.ModelView.Request;
@@ -10,10 +11,15 @@ namespace TesteTecnicoBTG.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IMemoryCache _memoryCache;
+        private readonly string _cachePreffix = "usuario_";
+        private readonly string _usuarioListCacheKey = "usuario_list";
+        private readonly MemoryCacheEntryOptions _cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(24));
 
-        public UsuarioService(IUsuarioRepository usuarioRepository)
+        public UsuarioService(IUsuarioRepository usuarioRepository, IMemoryCache memoryCache)
         {
             _usuarioRepository = usuarioRepository;
+            _memoryCache = memoryCache;
         }
 
         public async Task<UsuarioResponse> CreateUsuarioAsync(CreateUsuarioRequest request)
@@ -25,32 +31,55 @@ namespace TesteTecnicoBTG.Services
                 StatusConta = StatusConta.Ativo
             };
             var newUsuario = await _usuarioRepository.CreateUsuarioAsync(usuario);
+
+            _memoryCache.Remove(_usuarioListCacheKey);
+
             return newUsuario.ToResponse();
         }
 
-        public async Task<bool> DeleteUsuarioAsync(string userId)
+        public async Task<bool> DeleteUsuarioAsync(string usuarioId)
         {
-            var success = await _usuarioRepository.DeleteUsuarioAsync(userId);
-            //var success = await _usuarioRepository.SoftDeleteUsuarioAsync(userId);
+            var success = await _usuarioRepository.DeleteUsuarioAsync(usuarioId);
+            //var success = await _usuarioRepository.SoftDeleteUsuarioAsync(usuarioId);
+            if (success)
+            {
+                _memoryCache.Remove($"usuario_{usuarioId}");
+                _memoryCache.Remove(_usuarioListCacheKey);
+            }
             return success;
         }
 
-        public async Task<UsuarioResponse?> GetUsuarioAsync(string userId)
+        public async Task<UsuarioResponse?> GetUsuarioAsync(string usuarioId)
         {
-            var usuario = await _usuarioRepository.GetUsuarioAsync(userId);
-            return usuario?.ToResponse();
+            string key = $"{_cachePreffix}{usuarioId}";
+            if (!_memoryCache.TryGetValue(key, out UsuarioResponse? response))
+            {
+                var usuario = await _usuarioRepository.GetUsuarioAsync(usuarioId);
+                response = usuario?.ToResponse();
+
+                _memoryCache.Set(key, response, _cacheOptions);
+            }
+
+            return response;
         }
 
-        public async Task<List<UsuarioResponse>> GetUsuarioListAsync()
+        public async Task<List<UsuarioResponse>?> GetUsuarioListAsync()
         {
-            var usuarioList = await _usuarioRepository.GetUsuarioListAsync();
-            return usuarioList.Select(u => u.ToResponse()).ToList();
+            if (!_memoryCache.TryGetValue(_usuarioListCacheKey, out List<UsuarioResponse>? listResponse))
+            {
+                var usuarioList = await _usuarioRepository.GetUsuarioListAsync();
+                listResponse = usuarioList.Select(u => u.ToResponse()).ToList();
+
+                _memoryCache.Set(_usuarioListCacheKey, listResponse, _cacheOptions);
+            }
+
+            return listResponse;
         }
 
-        public async Task<UsuarioResponse?> UpdateUsuarioAsync(string userId, UpdateUsuarioRequest request)
+        public async Task<UsuarioResponse?> UpdateUsuarioAsync(string usuarioId, UpdateUsuarioRequest request)
         {
 
-            var usuarioDb = await _usuarioRepository.GetUsuarioAsync(userId);
+            var usuarioDb = await _usuarioRepository.GetUsuarioAsync(usuarioId);
             if (usuarioDb == null) return null;
 
             usuarioDb.NomeTitular = request.NomeTitular ?? usuarioDb.NomeTitular;
@@ -58,9 +87,17 @@ namespace TesteTecnicoBTG.Services
             if (request.StatusConta.HasValue)
                 usuarioDb.StatusConta = request.StatusConta.Value;
 
-            var sucesso = await _usuarioRepository.UpdateUsuarioAsync(usuarioDb);
-            
-            if (!sucesso) throw new Exception("Nenhum registro foi atualizado.");
+            var success = await _usuarioRepository.UpdateUsuarioAsync(usuarioDb);
+
+            if (success)
+            {
+                _memoryCache.Remove($"usuario_{usuarioId}");
+                _memoryCache.Remove(_usuarioListCacheKey);
+            }
+            else
+            {
+                throw new Exception("Nenhum registro foi atualizado.");
+            }
             return usuarioDb?.ToResponse();
         }
     }
