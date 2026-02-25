@@ -36,16 +36,16 @@ namespace TesteTecnicoBTG.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UsuarioResponse>> GetUsuarioDetail(string usuarioId)
+        public async Task<ActionResult<UsuarioResponse>> GetUsuarioDetail(string id)
         {
             try
             {
-                var usuario = await _usuarioService.GetUsuarioAsync(usuarioId);
+                var usuario = await _usuarioService.GetUsuarioAsync(id);
                 if (usuario == null)
                 {
                     return NotFound(new { Detail = "Nenhum usuário encontrado." });
                 }
-                return Ok(new UsuarioResponse());
+                return Ok(usuario);
             }
             catch (Exception ex)
             {
@@ -60,7 +60,7 @@ namespace TesteTecnicoBTG.Controllers
             try
             {
                 var usuario = await _usuarioService.CreateUsuarioAsync(request);
-                return Ok(new UsuarioResponse());
+                return Ok(usuario);
             }
             catch (Exception ex)
             {
@@ -70,16 +70,16 @@ namespace TesteTecnicoBTG.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<UsuarioResponse>> UpdateUsuario(string usuarioId, [FromBody] UpdateUsuarioRequest request)
+        public async Task<ActionResult<UsuarioResponse>> UpdateUsuario(string id, [FromBody] UpdateUsuarioRequest request)
         {
             try
             {
-                var usuario = await _usuarioService.UpdateUsuarioAsync(usuarioId, request);
+                var usuario = await _usuarioService.UpdateUsuarioAsync(id, request);
                 if (usuario == null)
                 {
                     return NotFound(new { Detail = "Nenhum usuário encontrado." });
                 }
-                return Ok(new UsuarioResponse());
+                return Ok(usuario);
             }
             catch (Exception ex)
             {
@@ -89,11 +89,11 @@ namespace TesteTecnicoBTG.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUsuario(string usuarioId)
+        public async Task<ActionResult> DeleteUsuario(string id)
         {
             try
             {
-                var success = await _usuarioService.DeleteUsuarioAsync(usuarioId);
+                var success = await _usuarioService.DeleteUsuarioAsync(id);
                 if (!success)
                 {
                     return NotFound(new { Detail = "Usuário não existe ou já removido." });

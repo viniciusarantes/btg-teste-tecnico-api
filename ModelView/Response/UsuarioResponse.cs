@@ -1,4 +1,6 @@
-﻿namespace TesteTecnicoBTG.ModelView.Response
+﻿using System.Text.Json.Serialization;
+
+namespace TesteTecnicoBTG.ModelView.Response
 {
     public class UsuarioResponse
     {

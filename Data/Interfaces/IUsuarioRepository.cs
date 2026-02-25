@@ -8,7 +8,7 @@ namespace TesteTecnicoBTG.Data.Interfaces
         Task<List<Usuario>> GetUsuarioListAsync();
         Task<Usuario?> GetUsuarioAsync(string usuarioId);
         Task<Usuario> CreateUsuarioAsync(Usuario usuario);
-        Task<Usuario?> UpdateUsuarioAsync(Usuario usuario);
+        Task<bool> UpdateUsuarioAsync(Usuario usuario);
         Task<bool> DeleteUsuarioAsync(string usuarioId);
         Task<bool> SoftDeleteUsuarioAsync(string usuarioId);
     }

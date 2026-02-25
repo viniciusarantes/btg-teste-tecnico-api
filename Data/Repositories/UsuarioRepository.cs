@@ -46,7 +46,7 @@ namespace TesteTecnicoBTG.Data.Repositories
         public async Task<bool> DeleteUsuarioAsync(string usuarioId)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
-            var sql = "DELETE usuario WHERE id = @UsuarioId";
+            var sql = "DELETE FROM usuario WHERE id = @UsuarioId";
             var rowsAffected = await connection.ExecuteAsync(sql, new { UsuarioId = usuarioId });
 
             return rowsAffected > 0;
@@ -55,10 +55,10 @@ namespace TesteTecnicoBTG.Data.Repositories
         public async Task<Usuario?> GetUsuarioAsync(string usuarioId)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
-            var sql = "SELECT id, nomeTitular, cpf, statusConta FROM usuario WHERE id = @UsuarioId";
-            var usuarioList = await connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { UsuarioId = usuarioId });
+            var sql = "SELECT id, nomeTitular, cpf, statusConta FROM usuario WHERE id = @UsuarioId AND isDeleted = 0";
+            var usuario = await connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { UsuarioId = usuarioId });
 
-            return usuarioList;
+            return usuario;
         }
 
         public async Task<List<Usuario>> GetUsuarioListAsync()
@@ -70,15 +70,9 @@ namespace TesteTecnicoBTG.Data.Repositories
             return usuarioList.ToList();
         }
 
-        public async Task<Usuario?> UpdateUsuarioAsync(Usuario usuario)
+        public async Task<bool> UpdateUsuarioAsync(Usuario usuario)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
-            var usuarioDb = await GetUsuarioAsync(usuario.Id);
-            if (usuarioDb == null) return null;
-
-            usuarioDb.NomeTitular = usuario.NomeTitular ?? usuarioDb.NomeTitular;
-            usuarioDb.Cpf = usuario.Cpf ?? usuarioDb.Cpf;
-            usuarioDb.StatusConta = usuario.StatusConta;
 
             var sql = @"
                 UPDATE usuario SET 
@@ -89,13 +83,13 @@ namespace TesteTecnicoBTG.Data.Repositories
 
             var rowsAffected = await connection.ExecuteAsync(sql, new
             {
-                NomeTitular = usuarioDb.NomeTitular,
-                Cpf = usuarioDb.Cpf,
-                StatusConta = usuarioDb.StatusConta
+                UsuarioId = usuario.Id,
+                NomeTitular = usuario.NomeTitular,
+                Cpf = usuario.Cpf,
+                StatusConta = usuario.StatusConta
             });
 
-            if (rowsAffected == 0) throw new Exception("Nenhum registro foi atualizado");
-            return usuarioDb;
+            return rowsAffected > 0;
         }
     }
 }

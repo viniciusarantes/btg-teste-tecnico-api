@@ -1,6 +1,8 @@
 ﻿using TesteTecnicoBTG.Data.Interfaces;
+using TesteTecnicoBTG.Mapper;
 using TesteTecnicoBTG.Models;
 using TesteTecnicoBTG.ModelView.Request;
+using TesteTecnicoBTG.ModelView.Response;
 using TesteTecnicoBTG.Services.Interfaces;
 
 namespace TesteTecnicoBTG.Services
@@ -14,7 +16,7 @@ namespace TesteTecnicoBTG.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<Usuario> CreateUsuarioAsync(CreateUsuarioRequest request)
+        public async Task<UsuarioResponse> CreateUsuarioAsync(CreateUsuarioRequest request)
         {
             var usuario = new Usuario()
             {
@@ -23,39 +25,43 @@ namespace TesteTecnicoBTG.Services
                 StatusConta = StatusConta.Ativo
             };
             var newUsuario = await _usuarioRepository.CreateUsuarioAsync(usuario);
-            return newUsuario;
+            return newUsuario.ToResponse();
         }
 
         public async Task<bool> DeleteUsuarioAsync(string userId)
         {
-            // var success = await _usuarioRepository.DeleteUsuarioAsync(userId);
-            var success = await _usuarioRepository.SoftDeleteUsuarioAsync(userId);
+            var success = await _usuarioRepository.DeleteUsuarioAsync(userId);
+            //var success = await _usuarioRepository.SoftDeleteUsuarioAsync(userId);
             return success;
         }
 
-        public async Task<Usuario?> GetUsuarioAsync(string userId)
+        public async Task<UsuarioResponse?> GetUsuarioAsync(string userId)
         {
             var usuario = await _usuarioRepository.GetUsuarioAsync(userId);
-            return usuario;
+            return usuario?.ToResponse();
         }
 
-        public async Task<List<Usuario>> GetUsuarioListAsync()
+        public async Task<List<UsuarioResponse>> GetUsuarioListAsync()
         {
             var usuarioList = await _usuarioRepository.GetUsuarioListAsync();
-            return usuarioList;
+            return usuarioList.Select(u => u.ToResponse()).ToList();
         }
 
-        public async Task<Usuario?> UpdateUsuarioAsync(string userId, UpdateUsuarioRequest request)
+        public async Task<UsuarioResponse?> UpdateUsuarioAsync(string userId, UpdateUsuarioRequest request)
         {
-            var usuario = new Usuario()
-            {
-                Id = userId.ToString(),
-                NomeTitular = request.NomeTitular,
-                Cpf = request.Cpf,
-                StatusConta = request.StatusConta,
-            };
-            var updated = await _usuarioRepository.UpdateUsuarioAsync(usuario);
-            return updated;
+
+            var usuarioDb = await _usuarioRepository.GetUsuarioAsync(userId);
+            if (usuarioDb == null) return null;
+
+            usuarioDb.NomeTitular = request.NomeTitular ?? usuarioDb.NomeTitular;
+            usuarioDb.Cpf = request.Cpf ?? usuarioDb.Cpf;
+            if (request.StatusConta.HasValue)
+                usuarioDb.StatusConta = request.StatusConta.Value;
+
+            var sucesso = await _usuarioRepository.UpdateUsuarioAsync(usuarioDb);
+            
+            if (!sucesso) throw new Exception("Nenhum registro foi atualizado.");
+            return usuarioDb?.ToResponse();
         }
     }
 }
