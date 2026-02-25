@@ -26,14 +26,14 @@ namespace TesteTecnicoBTG.Services
             return newUsuario;
         }
 
-        public async Task<bool> DeleteUsuarioAsync(Guid userId)
+        public async Task<bool> DeleteUsuarioAsync(string userId)
         {
             // var success = await _usuarioRepository.DeleteUsuarioAsync(userId);
             var success = await _usuarioRepository.SoftDeleteUsuarioAsync(userId);
             return success;
         }
 
-        public async Task<Usuario?> GetUsuarioAsync(Guid userId)
+        public async Task<Usuario?> GetUsuarioAsync(string userId)
         {
             var usuario = await _usuarioRepository.GetUsuarioAsync(userId);
             return usuario;
@@ -45,11 +45,11 @@ namespace TesteTecnicoBTG.Services
             return usuarioList;
         }
 
-        public async Task<Usuario?> UpdateUsuarioAsync(Guid userId, UpdateUsuarioRequest request)
+        public async Task<Usuario?> UpdateUsuarioAsync(string userId, UpdateUsuarioRequest request)
         {
             var usuario = new Usuario()
             {
-                Id = userId,
+                Id = userId.ToString(),
                 NomeTitular = request.NomeTitular,
                 Cpf = request.Cpf,
                 StatusConta = request.StatusConta,

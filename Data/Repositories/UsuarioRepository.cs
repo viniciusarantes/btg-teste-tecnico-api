@@ -18,7 +18,7 @@ namespace TesteTecnicoBTG.Data.Repositories
         {
             using var connection = _dbConnectionFactory.CreateConnection();
             
-            usuario.Id = Guid.NewGuid();
+            usuario.Id = Guid.NewGuid().ToString();
 
             var sql = @"
                 INSERT INTO usuario (id, nomeTitular, cpf, statusConta, isDeleted) 
@@ -34,7 +34,7 @@ namespace TesteTecnicoBTG.Data.Repositories
             return usuario;
         }
 
-        public async Task<bool> SoftDeleteUsuarioAsync(Guid usuarioId)
+        public async Task<bool> SoftDeleteUsuarioAsync(string usuarioId)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
             var sql = "UPDATE usuario SET isDeleted = 1 WHERE id = @UsuarioId";
@@ -43,7 +43,7 @@ namespace TesteTecnicoBTG.Data.Repositories
             return rowsAffected > 0;
         }
 
-        public async Task<bool> DeleteUsuarioAsync(Guid usuarioId)
+        public async Task<bool> DeleteUsuarioAsync(string usuarioId)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
             var sql = "DELETE usuario WHERE id = @UsuarioId";
@@ -52,10 +52,10 @@ namespace TesteTecnicoBTG.Data.Repositories
             return rowsAffected > 0;
         }
 
-        public async Task<Usuario?> GetUsuarioAsync(Guid usuarioId)
+        public async Task<Usuario?> GetUsuarioAsync(string usuarioId)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
-            var sql = "SELECT id, nomeTitular, cpf, statusConta WHERE id = @UsuarioId";
+            var sql = "SELECT id, nomeTitular, cpf, statusConta FROM usuario WHERE id = @UsuarioId";
             var usuarioList = await connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { UsuarioId = usuarioId });
 
             return usuarioList;
@@ -64,7 +64,7 @@ namespace TesteTecnicoBTG.Data.Repositories
         public async Task<List<Usuario>> GetUsuarioListAsync()
         {
             using var connection = _dbConnectionFactory.CreateConnection();
-            var sql = "SELECT id, nomeTitular, cpf, statusConta";
+            var sql = "SELECT id, nomeTitular, cpf, statusConta FROM usuario";
             var usuarioList = await connection.QueryAsync<Usuario>(sql);
 
             return usuarioList.ToList();

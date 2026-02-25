@@ -10,10 +10,10 @@ namespace TesteTecnicoBTG.Controllers
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
-        private readonly Logger<UsuarioController> _logger;
+        private readonly ILogger<UsuarioController> _logger;
         private readonly IUsuarioService _usuarioService;
 
-        public UsuarioController(Logger<UsuarioController> logger, IUsuarioService usuarioService)
+        public UsuarioController(ILogger<UsuarioController> logger, IUsuarioService usuarioService)
         {
             _logger = logger;
             _usuarioService = usuarioService;
@@ -36,7 +36,7 @@ namespace TesteTecnicoBTG.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UsuarioResponse>> GetUsuarioDetail(Guid usuarioId)
+        public async Task<ActionResult<UsuarioResponse>> GetUsuarioDetail(string usuarioId)
         {
             try
             {
@@ -70,11 +70,11 @@ namespace TesteTecnicoBTG.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<UsuarioResponse>> UpdateUsuario(Guid usuarioId)
+        public async Task<ActionResult<UsuarioResponse>> UpdateUsuario(string usuarioId, [FromBody] UpdateUsuarioRequest request)
         {
             try
             {
-                var usuario = await _usuarioService.UpdateUsuarioAsync(usuarioId);
+                var usuario = await _usuarioService.UpdateUsuarioAsync(usuarioId, request);
                 if (usuario == null)
                 {
                     return NotFound(new { Detail = "Nenhum usuário encontrado." });
@@ -89,7 +89,7 @@ namespace TesteTecnicoBTG.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUsuario(Guid usuarioId)
+        public async Task<ActionResult> DeleteUsuario(string usuarioId)
         {
             try
             {
