@@ -7,17 +7,24 @@ namespace TesteTecnicoBTG.Data.Repositories
     public class UsuarioRepository : IUsuarioRepository
     {
 
-        private readonly DBConnectionFactory _dbConnection;
+        private readonly DBConnectionFactory _dbConnectionFactory;
+
+        public UsuarioRepository(DBConnectionFactory dbConnectionFactory)
+        {
+            _dbConnectionFactory = dbConnectionFactory;
+        }
 
         public async Task<Usuario> CreateUsuarioAsync(Usuario usuario)
         {
+            using var connection = _dbConnectionFactory.CreateConnection();
+            
             usuario.Id = Guid.NewGuid();
 
             var sql = @"
                 INSERT INTO usuario (id, nomeTitular, cpf, statusConta, isDeleted) 
                 VALUES (@Id, @NomeTitular, @Cpf, @StatusConta, 0)";
 
-            await _dbConnection.Connection.ExecuteAsync(sql, new 
+            await connection.ExecuteAsync(sql, new 
             { 
                 Id = usuario.Id,
                 NomeTitular = usuario.NomeTitular,
@@ -29,38 +36,43 @@ namespace TesteTecnicoBTG.Data.Repositories
 
         public async Task<bool> SoftDeleteUsuarioAsync(Guid usuarioId)
         {
+            using var connection = _dbConnectionFactory.CreateConnection();
             var sql = "UPDATE usuario SET isDeleted = 1 WHERE id = @UsuarioId";
-            var rowsAffected = await _dbConnection.Connection.ExecuteAsync(sql, new { UsuarioId = usuarioId });
+            var rowsAffected = await connection.ExecuteAsync(sql, new { UsuarioId = usuarioId });
 
             return rowsAffected > 0;
         }
 
         public async Task<bool> DeleteUsuarioAsync(Guid usuarioId)
         {
+            using var connection = _dbConnectionFactory.CreateConnection();
             var sql = "DELETE usuario WHERE id = @UsuarioId";
-            var rowsAffected = await _dbConnection.Connection.ExecuteAsync(sql, new { UsuarioId = usuarioId });
+            var rowsAffected = await connection.ExecuteAsync(sql, new { UsuarioId = usuarioId });
 
             return rowsAffected > 0;
         }
 
         public async Task<Usuario?> GetUsuarioAsync(Guid usuarioId)
         {
+            using var connection = _dbConnectionFactory.CreateConnection();
             var sql = "SELECT id, nomeTitular, cpf, statusConta WHERE id = @UsuarioId";
-            var usuarioList = await _dbConnection.Connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { UsuarioId = usuarioId });
+            var usuarioList = await connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { UsuarioId = usuarioId });
 
             return usuarioList;
         }
 
         public async Task<List<Usuario>> GetUsuarioListAsync()
         {
+            using var connection = _dbConnectionFactory.CreateConnection();
             var sql = "SELECT id, nomeTitular, cpf, statusConta";
-            var usuarioList = await _dbConnection.Connection.QueryAsync<Usuario>(sql);
+            var usuarioList = await connection.QueryAsync<Usuario>(sql);
 
             return usuarioList.ToList();
         }
 
         public async Task<Usuario?> UpdateUsuarioAsync(Usuario usuario)
         {
+            using var connection = _dbConnectionFactory.CreateConnection();
             var usuarioDb = await GetUsuarioAsync(usuario.Id);
             if (usuarioDb == null) return null;
 
@@ -75,7 +87,7 @@ namespace TesteTecnicoBTG.Data.Repositories
                     statusConta = @StatusConta 
                 WHERE id = @UsuarioId";
 
-            var rowsAffected = await _dbConnection.Connection.ExecuteAsync(sql, new
+            var rowsAffected = await connection.ExecuteAsync(sql, new
             {
                 NomeTitular = usuarioDb.NomeTitular,
                 Cpf = usuarioDb.Cpf,

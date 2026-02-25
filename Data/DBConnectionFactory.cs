@@ -1,21 +1,18 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Data;
+using System.Data.Common;
 
 namespace TesteTecnicoBTG.Data
 {
-    public class DBConnectionFactory : IDisposable
+    public class DBConnectionFactory
     {
-        public IDbConnection Connection { get; }
+        private readonly string _connectionString;
 
         public DBConnectionFactory(IConfiguration config)
         {
-            Connection = new SqliteConnection(config.GetConnectionString("SqliteConnection"));
-            Connection.Open();
+            _connectionString = config.GetConnectionString("SqliteConnection");
         }
 
-        public void Dispose()
-        {
-            Connection.Dispose();
-        }
+        public DbConnection CreateConnection() => new SqliteConnection(_connectionString);
     }
 }
